@@ -3,13 +3,6 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
-  - javascript
-
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -21,221 +14,256 @@ code_clipboard: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the OpenDigitalPay.io API! 
 
 We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
-# Authentication
-
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
+# OpenPay
+## Create balance account
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+curl -X POST http://opendigitalpay.io/api/v1/order \
+-H "Content-Type: application/json" --data-raw \
+'{
+      "customer_id" : 1231231,
+      "business_id" : 13123131
+      "reference_id": "my-order-001",
+      "line_items": [
+        {
+          "name": "New York Strip Steak",
+          "quantity": "1",
+          "base_price_money": {
+            "amount": 1599,
+            "currency": "USD"
+          }
+        }
+      ]
+      metadata: {}
+}'
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+    "id": 1142342135234
 }
 ```
 
-This endpoint retrieves a specific kitten.
+This endpoint creates an payment order
+
+## Get order detail
+
+```shell
+curl -X GET http://opendigitalpay.io/api/v1/user/{id}
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+      "id"          : 1212131231,
+      "customer_id" : 1231231,
+      "business_id" : 13123131
+      "reference_id": "my-order-001",
+      "line_items": [
+        {
+          "name": "New York Strip Steak",
+          "quantity": "1",
+          "base_price_money": {
+            "amount": 1599,
+            "currency": "USD"
+          }
+        }
+      ],
+      "metadata": {}
+}
+```
+This endpoint retrieves detail info for an order.
 
 <aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://opendigitalpay.io/api/v1/order/{id}`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+id | The order id 
 
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+## Pay an order
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
+curl "http://opendigitalpay.io/api/v1/orders/{order_id}/pay" \
+  -X POST \
+'{
+    "payment_source": {
+        "type": "TOKEN"
+        "value": "tok_xxxx"
+        or 
+        "type": "PAYMENT_METHOD_ID"
+        "value": "123232"
+        or 
+        "type"  "BALANCE_ACCOUNT_ID"
+        "value": "1232ddd32"
+        or 
+        "type"  "Interact"
+        "value": "interactServiceRequestId"
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+    }
+}
+'
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+    "id": 13412123100, 
+    "created_at": 1212312993
 }
 ```
 
-This endpoint deletes a specific kitten.
+This endpoint initiates submit a payment request for a given order
+<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`GET http://opendigitalpay.io/api/v1/orders/{order_id}/pay`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to delete
+order_id | The order id 
 
+# OpenBalance
+
+## Create balance account
+```shell
+curl -X POST http://opendigitalpay.io/api/v1/user \
+-H "Content-Type: application/json" --data-raw \
+'{
+    "email": "x@gmail.com", 
+    "phone": "423423",      
+    "userName" "coderx"     
+}'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "id": 134124141241,
+    "email": "x@gmail.com",
+    "phone": "423423",
+    "userName": "coderx",
+    "created_at": 123192912991
+}
+```
+
+This endpoint create balance accounts for a user.
+
+## Get balance account Detail
+
+```shell
+curl -X GET http://opendigitalpay.io/api/v1/user/{id}
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "id": 134124141241,
+    "email": "x@gmail.com",
+    "phone": "423423",
+    "userName": "coderx",
+    "created_at": 1342423423,
+    "updated_at": 123192912991
+    "meta": {
+        
+    }
+    "balanceAccounts": [
+        {
+            "balance": 123234200,
+            "currency": "CAD",
+            "type": "CASH",
+            "meta": {
+
+            },
+            "state": "active"
+        }
+    ]
+}
+
+```
+
+This endpoint retrieves balance account detail for a user.
+
+<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+
+### HTTP Request
+
+`GET http://opendigitalpay.io/api/v1/user/{id}`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+id | The user id 
+
+## Try a topup txn
+
+```shell
+curl "http://opendigitalpay.io/api/v1/topup/try" \
+  -X POST \
+'{
+    "userId": 1212412412,
+    "amount": 11231200,
+    "currency": "CAD",
+    "meta: {
+
+    }
+}'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "id": 13412123100, 
+    "created_at": 1212312993
+}
+```
+
+This endpoint initiate a try operation for a topup transaction
+
+## Commit a Topup txn
+
+```shell
+curl "http://opendigitalpay.io/api/v1/topup/commit" \
+  -X POST \
+'{
+    "id": 13412123100, 
+    "meta": {
+    }
+}'
+```
+
+This endpoint perform a commit operation for a topup transaction
+
+
+## Cancel a Topup Txn
+
+```shell
+curl "http://opendigitalpay.io/api/v1/topup/cancel" \
+  -X POST \
+'{
+    "id": 13412123100, 
+    "meta": {
+    }
+}'
+```
+
+This endpoint perform a cancel operation for a topup transaction
